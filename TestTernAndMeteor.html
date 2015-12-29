@@ -3,12 +3,16 @@
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+<div class="container theme-showcase">
+  <div class="jumbotron">
+    <h1>Welcome to Meteor!</h1>
 
-  {{> hello}}
+  	{{> hello}}
+  </div>
+</div>
 </body>
 
 <template name="hello">
-  <button>Click Me</button>
+  <button class="btn btn-lg btn-primary">Click Me</button>
   <p>You've pressed the button {{counter}} times.</p>
 </template>
