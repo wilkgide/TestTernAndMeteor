@@ -1,0 +1,1 @@
+Running through the meteor tutorial programming in eclipse with the Tern plugin.
