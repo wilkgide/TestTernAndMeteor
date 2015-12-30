@@ -1,18 +1,32 @@
 <head>
-  <title>TestTernAndMeteor</title>
+<title>TestTernAndMeteor</title>
 </head>
 
 <body>
-<div class="container theme-showcase">
-  <div class="jumbotron">
-    <h1>Welcome to Meteor!</h1>
-
-  	{{> hello}}
-  </div>
-</div>
+	<div class="container theme-showcase">
+		<header class="jumbotron">
+			<h1>Task List</h1>
+		</header>
+		<div class="panel panel-primary">
+			<div class="panel-heading">Add Task</div>
+			<div class="panel-body">
+				<form name="add-task" class="new-task">
+					<input type="text" name="text" placeholder="Type to add a new task."/>
+				</form>
+			</div>
+		</div>
+		{{> taskList}}
+	</div>
 </body>
 
-<template name="hello">
-  <button class="btn btn-lg btn-primary">Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="taskList">
+<ul class="list-group">
+	{{#each tasks}}
+	{{> task}}
+	{{/each}}
+</ul>
+</template>
+
+<template name="task">
+<li class="list-group-item">{{text}}</li>
 </template>
