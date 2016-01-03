@@ -24,11 +24,30 @@ if (Meteor.isClient) {
 		tasks : function() {
 			return Tasks.find({}, {
 				sort : {
+					order: 1,
 					createdAt : -1
 				}
 			});
+		},
+		tasks_sortable_options : function() {
+			return {
+				group : {
+					name : "tasks",
+					pull : false,
+					put : false
+				}
+			};
 		}
 	});
+	
+	Template.taskList.events({
+		"update" : function(event) {
+			console.log(event);
+		},
+		"sort" : function(event) {
+			console.log(event);
+		}
+	})
 
 	Template.task.events({
 		"click .toggle-checked" : function(event) {
