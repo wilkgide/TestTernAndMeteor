@@ -11,22 +11,28 @@
 			<div class="panel-heading">Add Task</div>
 			<div class="panel-body">
 				<form name="add-task" class="new-task">
-					<input type="text" name="text" placeholder="Type to add a new task."/>
+					<input type="text" name="text"
+						placeholder="Type to add a new task." />
 				</form>
 			</div>
 		</div>
+		<h2>Tasks</h2>
 		{{> taskList}}
 	</div>
 </body>
 
 <template name="taskList">
-<ul class="list-group">
-	{{#each tasks}}
-	{{> task}}
-	{{/each}}
-</ul>
+<h1>Regular List</h1>
+<div class="list-group">{{#each tasks}} {{> task}} {{/each}}</div>
 </template>
 
 <template name="task">
-<li class="list-group-item">{{text}}</li>
+<div
+	class="list-group-item{{#if checked}} checked{{/if}} .hover-primary">
+	<h4 class="list-group-item-heading">{{text}}</h4>
+	<button class="delete glyphicon glyphicon-remove"></button>
+	<input type="checkbox" checked="{{checked}}"
+		class="toggle-checked checkbox-primary" /> <span
+		class="list-group-item-text">{{text}}</span>
+</div>
 </template>
