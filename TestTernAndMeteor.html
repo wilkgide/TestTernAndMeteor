@@ -5,7 +5,7 @@
 <body>
 	<div class="container theme-showcase">
 		<header class="jumbotron">
-			<h1>Task List</h1>
+			<h1>Task List App</h1>
 		</header>
 		<div class="panel panel-primary">
 			<div class="panel-heading">Add Task</div>
@@ -22,6 +22,12 @@
 </body>
 
 <template name="taskList">
+<h2>Todo List</h2>
+<p>{{incompleteCount}} of {{visibleCount}} tasks are incomplete</p>
+<label class="hide-completed">
+	<input type="checkbox" checked="{{hideCompleted}}" />
+	Hide Completed Tasks 
+</label>
 <h1>Sortable List</h1>
 <div class="row">
 	{{#sortable items=tasks options=tasks_sortable_options}}

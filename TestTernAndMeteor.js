@@ -13,22 +13,34 @@ if (Meteor.isClient) {
 			Tasks.insert({
 				text : text,
 				// current time
-				createdAt : new Date(), 
+				createdAt : new Date(),
 				order : i++
 			})
 
 			// clear form
 			event.target.text.value = "";
 		}
-	})
+	});
 
 	Template.taskList.helpers({
 		tasks : function() {
-			return Tasks.find({}, {
-				sort : {
-					order: 1
-				}
-			});
+			if (Session.get("hideCompleted")) {
+				return Tasks.find({
+					checked : {
+						$ne : true
+					}
+				}, {
+					sort : {
+						order : 1
+					}
+				});
+			} else {
+				return Tasks.find({}, {
+					sort : {
+						order : 1
+					}
+				});
+			}
 		},
 		tasks_sortable_options : function() {
 			return {
@@ -37,17 +49,37 @@ if (Meteor.isClient) {
 					pull : false,
 					put : false
 				},
-				sortField: "order"
+				sortField : "order"
 			};
+		},
+		hideCompleted : function() {
+			return Session.get("hideCompleted");
+		},
+		incompleteCount : function() {
+			return Tasks.find({checked : {$ne : true}}).count();
+		}, visibleCount : function() {
+			if (Session.get("hideCompleted")) {
+				return Tasks.find({
+					checked : {
+						$ne : true
+					}
+				}).count();
+			} else {
+				return Tasks.find({}).count();
+			}
 		}
 	});
-	
+
 	Template.taskList.events({
 		"collection-update" : function(event) {
 			console.log(event);
+		},
+
+		"change .hide-completed input" : function(event) {
+			Session.set("hideCompleted", event.target.checked);
 		}
 	})
-	
+
 	Template.task.helpers({
 		i : function() {
 			return i;
