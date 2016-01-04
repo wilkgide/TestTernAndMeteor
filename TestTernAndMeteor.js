@@ -2,25 +2,24 @@ Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
 	var i = 0;
-	Template.body.events({
-		"submit .new-task" : function(event) {
-			// Prevent default browser form submit
-			event.preventDefault();
+	Template.body
+			.events({
+				"submit .new-task" : function(event) {
+					if (Meteor.userId() == null) {
+						throw new Meteor.Error(
+								"Only logged in users can create tasks.");
+					}
+					// Prevent default browser form submit
+					event.preventDefault();
 
-			var text = event.target.text.value;
+					var text = event.target.text.value;
 
-			// Insert a task into the database
-			Tasks.insert({
-				text : text,
-				// current time
-				createdAt : new Date(),
-				order : i++
-			})
+					Meteor.call("addTask", text, i);
 
-			// clear form
-			event.target.text.value = "";
-		}
-	});
+					// clear form
+					event.target.text.value = "";
+				}
+			});
 
 	Template.taskList.helpers({
 		tasks : function() {
@@ -56,8 +55,13 @@ if (Meteor.isClient) {
 			return Session.get("hideCompleted");
 		},
 		incompleteCount : function() {
-			return Tasks.find({checked : {$ne : true}}).count();
-		}, visibleCount : function() {
+			return Tasks.find({
+				checked : {
+					$ne : true
+				}
+			}).count();
+		},
+		visibleCount : function() {
 			if (Session.get("hideCompleted")) {
 				return Tasks.find({
 					checked : {
@@ -94,22 +98,54 @@ if (Meteor.isClient) {
 
 	Template.task.events({
 		"click .toggle-checked" : function(event) {
-			// Set the checked property to the opposite of its current value
-			Tasks.update(this._id, {
-				$set : {
-					checked : !this.checked
-				}
-			});
+			Meteor.call("setChecked", this._id, !this.checked);
 		},
 
 		"click .delete" : function(event) {
-			// Delete this task
-			Tasks.remove(this._id);
+			Meteor.call("deleteTask", this._id);
 		}
 	})
+
+	Accounts.ui.config({
+		passwordSignupFields : "USERNAME_ONLY"
+	});
+
+	Meteor.subscribe("tasks");
 }
 
+Meteor.methods({
+	addTask : function(text, order) {
+		if (!Meteor.userId()) {
+			throw new Meteor.Error("Only logged in users can create tasks.");
+		}
+		// Insert a task into the database
+		Tasks.insert({
+			text : text,
+			// current time
+			createdAt : new Date(),
+			owner : Meteor.userId(),
+			username : Meteor.user().username,
+			order : order
+		})
+	},
+	deleteTask : function(taskId) {
+		// Delete this task
+		Tasks.remove(taskId);
+	},
+	setChecked : function(taskId, checked) {
+		// Set the checked property to the opposite of its current value
+		Tasks.update(taskId, {
+			$set : {
+				checked : checked
+			}
+		});
+	}
+});
+
 if (Meteor.isServer) {
+	Meteor.publish("tasks", function() {
+		return Tasks.find();
+	});
 	Meteor.startup(function() {
 		// code to run on server at startup
 	});

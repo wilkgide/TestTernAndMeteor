@@ -6,7 +6,9 @@
 	<div class="container theme-showcase">
 		<header class="jumbotron">
 			<h1>Task List App</h1>
+			{{> loginButtons}}
 		</header>
+		{{#if currentUser}}
 		<div class="panel panel-primary">
 			<div class="panel-heading">Add Task</div>
 			<div class="panel-body">
@@ -16,7 +18,7 @@
 				</form>
 			</div>
 		</div>
-		<h2>Tasks</h2>
+		{{/if}}
 		{{> taskList}}
 	</div>
 </body>
@@ -40,7 +42,7 @@
 {{increment}}
 <div
 	class="{{#if checked}} checked{{/if}} panel {{#if even}}panel-primary{{else}}panel-success{{/if}} col-lg-3">
-	<h4 class="panel-heading">{{text}}</h4>
+	<h4 class="panel-heading">{{text}} ({{username}})</h4>
 	<button class="delete glyphicon glyphicon-remove"></button>
 	<input type="checkbox" checked="{{checked}}"
 		class="toggle-checked checkbox-primary" /> <span
