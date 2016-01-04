@@ -23,19 +23,22 @@
 
 <template name="taskList">
 <h1>Sortable List</h1>
-<div class="list-group">
-	{{#sortable items=tasks options=tasks_sortable_options}} {{> task}}
+<div class="row">
+	{{#sortable items=tasks options=tasks_sortable_options}}
+	{{> task}}
 	{{/sortable}}
 </div>
 </template>
 
 <template name="task">
+{{increment}}
 <div
-	class="list-group-item{{#if checked}} checked{{/if}} .hover-primary">
-	<h4 class="list-group-item-heading">{{text}}</h4>
+	class="{{#if checked}} checked{{/if}} panel {{#if even}}panel-primary{{else}}panel-success{{/if}} col-lg-3">
+	<h4 class="panel-heading">{{text}}</h4>
 	<button class="delete glyphicon glyphicon-remove"></button>
 	<input type="checkbox" checked="{{checked}}"
 		class="toggle-checked checkbox-primary" /> <span
 		class="list-group-item-text">{{text}}</span>
+	<p>i={{i}}</p>
 </div>
 </template>

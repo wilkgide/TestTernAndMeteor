@@ -1,6 +1,7 @@
 Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
+	var i = 0;
 	Template.body.events({
 		"submit .new-task" : function(event) {
 			// Prevent default browser form submit
@@ -11,8 +12,9 @@ if (Meteor.isClient) {
 			// Insert a task into the database
 			Tasks.insert({
 				text : text,
-				createdAt : new Date()
-			// current time
+				// current time
+				createdAt : new Date(), 
+				order : i++
 			})
 
 			// clear form
@@ -24,8 +26,7 @@ if (Meteor.isClient) {
 		tasks : function() {
 			return Tasks.find({}, {
 				sort : {
-					order: 1,
-					createdAt : -1
+					order: 1
 				}
 			});
 		},
@@ -35,17 +36,27 @@ if (Meteor.isClient) {
 					name : "tasks",
 					pull : false,
 					put : false
-				}
+				},
+				sortField: "order"
 			};
 		}
 	});
 	
 	Template.taskList.events({
-		"update" : function(event) {
+		"collection-update" : function(event) {
 			console.log(event);
+		}
+	})
+	
+	Template.task.helpers({
+		i : function() {
+			return i;
 		},
-		"sort" : function(event) {
-			console.log(event);
+		increment : function() {
+			i++;
+		},
+		even : function() {
+			return i % 2 == 0;
 		}
 	})
 
